@@ -138,3 +138,11 @@ const observer = new IntersectionObserver(entries => {
 })
 //适用场景有SPA路由、图片画廊、电商商品图；
 ```
+- 请求合并、批处理：将多个并发请求合并为一次，减少http往返次数和 首字节时间；
+
+以下是各模块的核心要点汇总：
+- 内存管理 — 泄漏是最隐蔽的性能杀手。三大来源：未移除的事件监听器、闭包持有大对象、DOM 引用未清理。WeakMap 和 WeakRef 是解决隐式引用的利器，让 GC 能正常工作。
+- DOM 操作 — 重排（Reflow）代价极高。核心原则是"减少触发次数"：DocumentFragment 批量插入、读写分离避免强制同步布局、事件委托减少监听器数量。fastdom 等库也可以自动调度读写时序。
+- 异步优化 — 防抖适合"等用户操作结束后再响应"（如搜索框），节流适合"固定频率响应"（如滚动）。CPU 密集任务一定要挪到 Web Worker，主线程只做 UI。requestAnimationFrame 是动画的唯一正确选择。
+- 计算优化 — Memoization 对纯函数收益最大；虚拟列表是长列表的银弹，DOM 数量从数万降到几十；structuredClone 已成为深拷贝的现代标准，抛弃 JSON.parse/stringify。
+- 网络与加载 — 首屏性能的关键：路由懒加载 + 代码分割、DataLoader 模式合并请求、Service Worker 离线缓存、preload 提前拉取关键资源。注意 preload 不要滥用，只用于首屏必需资源。
