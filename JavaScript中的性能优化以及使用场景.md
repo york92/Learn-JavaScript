@@ -31,7 +31,24 @@ bigData = null
 
 
 **DOM操作**
+- 批量DOM操作，DocumentFragment每次dom修改都可能触发重排，使用DocumentFragment 在内存中构建完整结构，再一次性插入，
+```
+//触发100次重排
+for (let i = 0; i < 1000; i++) {
+  const li = document.createElement('li')
+  li.textContent = i
+  list.appendChild(li) // 每次触发重排
+}
 
+//只会触发一次重排
+const frag = document.createDocumentFragment()
+for (let i = 0; i < 1000; i++) {
+  const li = document.createElement('li')
+  li.textContent = i
+  frag.appendChild(li)
+}
+list.appendChild(frag) // 一次性插入
+```
 **异步优化**
 
 **计算优化**
