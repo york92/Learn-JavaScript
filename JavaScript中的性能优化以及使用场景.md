@@ -5,7 +5,7 @@
 - 计算优化
 - 网络与加载
 
-**内存管理**
+**1、内存管理**
 
 内存泄漏，事件监听器没有移除：
 - 组件销毁时没有清理事件监听，导致闭包持续占用内存，常见于SPA路由切换场景。比如：
@@ -30,7 +30,7 @@ bigData = null
 ```
 
 
-**DOM操作**
+**2、DOM操作**
 - 批量DOM操作，DocumentFragment每次dom修改都可能触发重排，使用DocumentFragment 在内存中构建完整结构，再一次性插入，
 ```
 //触发100次重排
@@ -49,9 +49,17 @@ for (let i = 0; i < 1000; i++) {
 }
 list.appendChild(frag) // 一次性插入
 ```
-**异步优化**
+- 事件委托：把子元素的事件监听提升到父元素，减少监听器数量，动态新增子元素也自动生效：
+```
+// ✅ 只绑定一个监听器
+list.addEventListener('click', (e) => {
+  const item = e.target.closest('.item')
+  if (item) handleClick(item.dataset.id)
+})
+```
+**3、异步优化**
 
-**计算优化**
+**4、计算优化**
 
 
-**网络与加载**
+**5、网络与加载**
