@@ -58,6 +58,35 @@ list.addEventListener('click', (e) => {
 })
 ```
 **3、异步优化**
+- 防抖：高频触发事件（输入，resize），只在停止触发后的延迟时间执行，避免重复调用开销大的操作；
+```
+  function debounce(fn, delay) {
+  let timer
+  return (...args) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => fn(...args), delay)
+  }
+}
+
+// 用户停止输入 300ms 后才发起搜索请求
+input.addEventListener('input', debounce(search, 300))
+```
+- 节流：保证在规定时间间隔内、最多执行一次，适用于需要固定频率响应的场景；
+```
+function throttle(fn, interval) {
+  let last = 0
+  return (...args) => {
+    const now = Date.now()
+    if (now - last >= interval) {
+      last = now
+      fn(...args)
+    }
+  }
+}
+
+// 滚动时每 100ms 最多更新一次位置
+window.addEventListener('scroll', throttle(updatePos, 100))
+```
 
 **4、计算优化**
 
