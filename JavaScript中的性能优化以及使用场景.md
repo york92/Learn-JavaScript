@@ -105,6 +105,36 @@ function memoize(fn) {
 
 const fib = memoize(n => n <= 1 ? n : fib(n-1) + fib(n-2))
 ```
+- 虚拟列表、虚拟滚动：只渲染可视区域的内的dom节点，列表无论多长内存占用恒定，大幅提升渲染性能：
+```
+// 核心思路：计算可见范围
+const visibleStart = Math.floor(scrollTop / itemH)
+const visibleEnd = visibleStart + Math.ceil(viewH / itemH)
+
+// 只渲染 [visibleStart, visibleEnd] 区间内的条目
+// 容器用 paddingTop 模拟已滚过的高度
+//适用场景：10万+行表格、消息列表、商品列表；
+```
+- 避免不必要的深拷贝，json序列化深拷贝 性能差而且有性能限制，优先使用结构化克隆或者浅拷贝 + 精准更新；
 
 
 **5、网络与加载**
+- 懒加载：路由级代码分割 + 图片懒加载， 减少首屏的资源体积，加快可交互时间：
+```
+// React 路由懒加载
+const Dashboard = React.lazy(() => import('./Dashboard'))
+
+// 图片原生懒加载
+<img src="photo.jpg" loading="lazy" />
+
+// Intersection Observer 懒加载
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.src = e.target.dataset.src
+      observer.unobserve(e.target)
+    }
+  })
+})
+//适用场景有SPA路由、图片画廊、电商商品图；
+```
