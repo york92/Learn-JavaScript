@@ -86,9 +86,25 @@ function throttle(fn, interval) {
 
 // 滚动时每 100ms 最多更新一次位置
 window.addEventListener('scroll', throttle(updatePos, 100))
+//使用场景有：滚动监听、鼠标移动轨迹、游戏帧更新。
 ```
 
 **4、计算优化**
+- 缓存纯函数结果：对相同输入缓存计算结果，避免重复计算，适用于无副作用的纯函数：
+```
+function memoize(fn) {
+  const cache = new Map()
+  return (...args) => {
+    const key = JSON.stringify(args)
+    if (cache.has(key)) return cache.get(key)
+    const result = fn(...args)
+    cache.set(key, result)
+    return result
+  }
+}
+
+const fib = memoize(n => n <= 1 ? n : fib(n-1) + fib(n-2))
+```
 
 
 **5、网络与加载**
